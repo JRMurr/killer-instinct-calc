@@ -1,4 +1,5 @@
 mod character;
+mod error;
 use crate::character::parse::get_char_info;
 #[macro_use]
 extern crate lazy_static;
@@ -34,7 +35,7 @@ extern crate lazy_static;
 // "Eagle",
 
 fn main() {
-    let info = get_char_info();
+    let info = get_char_info("Tusk").expect("Error getting character info");
     println!("{:?}", info.name);
     // for (_, data) in info.moves {
     //     println!("{:?}", data)

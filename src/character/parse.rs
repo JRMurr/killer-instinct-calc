@@ -1,6 +1,10 @@
-use crate::character::{CharacterInfo, KnockDown, MoveFrameData};
+use crate::{
+    character::{CharacterInfo, KnockDown, MoveFrameData},
+    error::KiCalcError,
+};
 use calamine::{open_workbook, DataType, Reader, Xlsx};
 use regex::Regex;
+use std::{fs::File, io::BufReader};
 
 fn parse_cell_num(cell: &DataType) -> Option<i16> {
     use DataType::*;
@@ -91,10 +95,13 @@ fn parse_row(row: &[DataType]) -> Option<MoveFrameData> {
     })
 }
 
-pub fn get_char_info() -> CharacterInfo {
-    let mut workbook: Xlsx<_> =
-        open_workbook("/home/jr/code/rustCode/kiCalc/src/kiFrameData.xlsx").expect("Cannot open file");
-    let char_info = workbook.worksheet_range("Tusk").unwrap().unwrap();
+pub fn get_char_info(name: &str) -> anyhow::Result<CharacterInfo> {
+    let mut workbook: Xlsx<BufReader<File>> = open_workbook("/home/jr/code/rustCode/kiCalc/src/kiFrameData.xlsx")?;
+    let char_info = workbook
+        .worksheet_range(&name)
+        .ok_or(KiCalcError::InvalidCharacter(name.into()))??;
+    // Some special moves special props are on the row with just the name, would be
+    // nice to grab that
     let moves = char_info
         .rows()
         .take_while(|x| x[0] != DataType::String("Enders".into()))
@@ -102,8 +109,8 @@ pub fn get_char_info() -> CharacterInfo {
         .filter_map(|x| parse_row(x))
         .map(|x| (x.name.clone(), x))
         .collect();
-    CharacterInfo {
+    Ok(CharacterInfo {
         name: "Tusk".into(),
         moves,
-    }
+    })
 }

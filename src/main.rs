@@ -1,6 +1,7 @@
 mod character;
 mod error;
 use crate::character::parse::get_char_info;
+use structopt::StructOpt;
 #[macro_use]
 extern crate lazy_static;
 
@@ -34,9 +35,16 @@ extern crate lazy_static;
 // "Shin Hisako",
 // "Eagle",
 
+#[derive(Debug, StructOpt)]
+#[structopt(name = "Killer Instinct Setup Finder")]
+struct KiCalcOptions {
+    #[structopt(short)]
+    character: String,
+}
+
 fn main() {
-    let info = get_char_info("Tusk").expect("Error getting character info");
-    println!("{:?}", info.name);
+    let opt = KiCalcOptions::from_args();
+    let info = get_char_info(&opt.character).expect("Error getting character info");
     // for (_, data) in info.moves {
     //     println!("{:?}", data)
     // }

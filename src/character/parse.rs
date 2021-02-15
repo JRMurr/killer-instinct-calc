@@ -48,9 +48,6 @@ fn parse_cell_num(cell: &DataType) -> Option<i16> {
 
 fn parse_row(row: &[DataType]) -> Option<MoveFrameData> {
     let name: String = row[0].get_string().unwrap().into();
-    if name == "QCF+2K > K" {
-        dbg!(&row);
-    }
     let startup = parse_cell_num(&row[2]);
     let active = parse_cell_num(&row[3]);
     let mut recovery = parse_cell_num(&row[4]);

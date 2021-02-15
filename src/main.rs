@@ -1,7 +1,8 @@
-// use calamine::{Reader, Xlsx, open_workbook};
-// use crate::character::parse::get_char_info;
 mod character;
 use crate::character::parse::get_char_info;
+#[macro_use]
+extern crate lazy_static;
+
 // "Jago",
 // "Sabrewulf",
 // "Glacius",
@@ -33,12 +34,10 @@ use crate::character::parse::get_char_info;
 // "Eagle",
 
 fn main() {
-    // let mut workbook: Xlsx<_> = open_workbook("/home/jr/code/rustCode/kiCalc/src/kiFrameData.xlsx").expect("Cannot open file");
-
-    // let char_info = workbook.worksheet_range("Tusk").unwrap().unwrap();
-    // for row in char_info.rows() {
-    //     println!("row={:?}, row[0]={:?}", row, row[0]);
-    // }
     let info = get_char_info();
-    println!("{:?}", info);
+    println!("{:?}", info.name);
+    // for (_, data) in info.moves {
+    //     println!("{:?}", data)
+    // }
+    println!("{:?}", info.moves.get("QCF+2K > K"))
 }
